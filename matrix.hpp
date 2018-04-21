@@ -1,50 +1,62 @@
 #include <initializer_list>
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 
 using namespace std;
 
-class Matrix {
+class Matrix_t{
+private:
+    int** ptr;
+    size_t n;
+    size_t m;
 
 public:
-
-    typedef int type;
-    Matrix()
+    Matrix_t()
     {
         ptr = nullptr;
         n = 0;
         m = 0;
     }
-    Matrix(std::initializer_list<int> list)
+    Matrix_t(std::initializer_list<int> list)
     {
+        n=3;
+        m=3;
+
         ptr = new int*[3];
         for (int i = 0; i < 3; i++)
             ptr[i] = new int[3];
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++){
-                ptr[i][j] = 0;
+                ptr[i][j] = 0+rand()%10;
             }
         }
-    }    
-    Matrix(const Matrix& mat)
+    }
+
+    Matrix_t(const Matrix_t& mat)
     {
+        n = mat.n;
+        m = mat.m;
         ptr = new int *[mat.n];
-        for (int i = 0; i < mat.n; ++i){
+        for (int i = 0; i < mat.n; i++){
             ptr[i] = new int[mat.m];
-            for (int j = 0; j < mat.m; ++j){
+        }
+
+        for(int i=0; i < mat.n; i++){
+            for (int j = 0; j < mat.m; j++){
                 ptr[i][j] = mat.ptr[i][j];
             }
         }
-        n = mat.n;
-        m = mat.m;
     }
-    auto swap_(Matrix& mat) -> void
+
+
+    auto swap_(Matrix_t& mat) -> void
     {
         swap(ptr, mat.ptr);
         swap(n, mat.n);
         swap(m, mat.m);
     }
-    auto operator=(const Matrix& q) -> Matrix
+    auto operator=(const Matrix_t& q) -> Matrix_t
     {
         if (ptr != nullptr){
             for (int i = 0; i < n; i++) delete[] ptr[i];
@@ -63,6 +75,7 @@ public:
         }
         return *this;
     }
+
     auto empty() -> bool
     {
         if (ptr == nullptr)
@@ -78,7 +91,8 @@ public:
     {
         return n;
     }
-    auto operator-(const Matrix& mat) -> Matrix
+
+    auto operator-(const Matrix_t& mat) -> Matrix_t&
     {
         if (n == mat.n && m == mat.m){
             for (int i = 0; i < n; i++){
@@ -88,8 +102,9 @@ public:
             }
             return *this;
         }
-    } 
-    auto operator+(const Matrix& mat) -> Matrix
+    }
+
+    auto operator+(const Matrix_t& mat) -> Matrix_t&
     {
         if (n == mat.n && m == mat.m){
             for (int i = 0; i < n; i++){
@@ -103,8 +118,8 @@ public:
     auto operator[](size_t index) -> int*
     {
         return ptr[index];
-    } 
-    bool operator==(const Matrix& mat)
+    }
+    bool operator==(const Matrix_t& mat)
     {
         if (n == mat.n && m == mat.m){
             for (int i = 0; i < n; i++){
@@ -117,38 +132,40 @@ public:
         }
         return false;
     }
+
     friend
-    auto operator<<(ostream& os, Matrix& mat) -> ostream&
+    auto operator<<(ostream& os, Matrix_t& mat) -> ostream&
     {
-        int x;
         os << mat.n << " " << mat.m << endl;
         for (int i = 0; i < mat.n; i++){
             for (int j = 0; j < mat.m; j++){
-                x = ptr[i][j];
-                os << x;
+                os << mat.ptr[i][j]<<"  ";
             }
             os << endl;
         }
         return os;
     }
     friend
-    auto operator>>(istream& is, Matrix& mat) -> istream&
+    auto operator>>(istream& is, Matrix_t& mat) -> istream&
     {
+      if(is){
+
         is >> mat.n >> mat.m;
+        mat.ptr=new int*[mat.n];
+        for(int i=0; i < mat.n; i++)
+            mat.ptr[i]=new int[mat.m];
         for (int i = 0; i < mat.n; i++){
             for (int j = 0; j < mat.m; j++){
-                is >> ptr[i][j];
+                is >> mat.ptr[i][j];
             }
         }
         return is;
+      }
+
     }
-    ~Matrix()
+    ~Matrix_t()
     {
         for (int i = 0; i < n; i++) delete[] ptr[i];
             delete [] ptr;
     }
-private:
-    int** ptr;
-    size_t n;
-    size_t m;
 };
