@@ -25,6 +25,7 @@ int main() {
     Matrix <int, 3, 2> m5{0, 2, 4, 6, 8, 10};
     cout << m5 << endl;
     cout << endl;
+    
     cout << m3 + m5 << endl;
     cout << m3 - m5 << endl;
 
