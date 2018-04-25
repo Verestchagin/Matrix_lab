@@ -3,7 +3,7 @@
 #include <fstream>
 #include <cstdlib>
 
-using namespace std;#include <initializer_list>
+using namespace std;
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
